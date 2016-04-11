@@ -1,5 +1,5 @@
 clear all;
-fileLoc = 'D:\Vertebroplasty Set\Compression Data\T4_CC3_post_vertebroplasty.is_comp_RawData\Specimen_RawData_1.csv';
+fileLoc = ''; %Directory to .csv
 incrSize = 0.2;
 
 %find limits of plot ie. > 50 N to max
@@ -17,7 +17,7 @@ upper = num2str(i);
 load = xlsread(fileLoc,strcat('B','1',':','B',upper));
 
 for incr=1:i-2
-    
+
     if(load(incr)<=51)
         lower = num2str(incr);
     end
@@ -31,8 +31,8 @@ y = xlsread(fileLoc,strcat('B',lower,':','B',upper));
 Fi=find(y);
 Di=find(x);%finds all index values for x and y
 plot(x,y)
-D=max(Di);%Finds max index value 
-m=max(x);%finds max displacement value 
+D=max(Di);%Finds max index value
+m=max(x);%finds max displacement value
 bb=m-incrSize;%finds beginning value of last displacement section
 b=(roundn(bb,-1))-0.1;%rounds to nearest 0.1 (10^-1) and takes 0.1 so the last chunk is always a full 0.6
 count=0;%starts an integer count
@@ -53,14 +53,3 @@ for aa=0:0.1:b %from a to last displacement section in 0.1s
 end
 
 MaxS =max(s)
-
-
-
-
-
-
-
-
-
-
-
