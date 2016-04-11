@@ -1,29 +1,31 @@
 ## Python Files for model generation in ScanIP and ABAQUS
 
-**caeToStiffnessOutput_FOR_CEMENT.py**
 
-Runs all previously set up cae files and returns txt files with the stiffness
 
-**segment_FOR_CEMENT.py**
+- **caeToStiffnessOutput_FOR_CEMENT.py**
 
-ScanIP python script to segment CT scan into model - for use with augmented vertebrae
+  Runs all previously set up cae files and returns txt files with the stiffness
 
-**segment_WITHOUT_CEMENT.py**
+- **segment_FOR_CEMENT.py**
 
-ScanIP python script to segment CT scan into model - for use without augmented vertebrae
+  ScanIP python script to segment CT scan into model - for use with augmented vertebrae
 
-**setup_models_WITHOUT_CEMENT.py**
+- **segment_WITHOUT_CEMENT.py**
 
-Takes all .inp files along with positions in a .csv and sets up all boundary conditions and interactions for a 1 mm compression.
+  ScanIP python script to segment CT scan into model - for use without augmented vertebrae
 
-**setup_models_FOR_CEMENT.py**
+- **setup_models_WITHOUT_CEMENT.py**
 
-Takes all .inp files along with positions in a .csv and sets up all boundary conditions and interactions for a 1 mm compression. For augmented models.
+  Takes all .inp files along with positions in a .csv and sets up all boundary conditions and interactions for a 1 mm compression.
 
-**setup_models_FOR_CEMENT_WITH_INTERFACE.py**
+- **setup_models_FOR_CEMENT.py**
 
-Takes all .inp files along with positions in a .csv and sets up all boundary conditions and interactions for a 1 mm compression. For augmented models with an interface layer.
+  Takes all .inp files along with positions in a .csv and sets up all boundary conditions and interactions for a 1 mm compression. For augmented models.
 
-**Find_Stiffness.m**
+- **setup_models_FOR_CEMENT_WITH_INTERFACE.py**
 
-Finds the stiffness from a .csv load displacement graph, between limits and with based on a segment width.
+  Takes all .inp files along with positions in a .csv and sets up all boundary conditions and interactions for a 1 mm compression. For augmented models with an interface layer.
+
+- **Find_Stiffness.m**
+
+  Finds the stiffness from a .csv load displacement graph, between limits and with based on a segment width.
