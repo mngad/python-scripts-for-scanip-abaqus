@@ -1,6 +1,6 @@
 clear all;
 fileLoc = ''; %Directory to .csv
-incrSize = 0.2;
+incrSize = 0.3;
 
 %find limits of plot ie. > 50 N to max
 
