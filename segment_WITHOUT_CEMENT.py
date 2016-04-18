@@ -1,10 +1,7 @@
 from scanip_api import *
 if InputDialog.AskYesNoQuestion('Align', 'Have you aligned the model?') == True:
     
-    App.GetDocument().GetBackgroundByName("Stack").SetActiveWindowLevel(WindowLevel.FromWindowLevel(255, 127.5))
-    
-    
-    
+    App.GetDocument().ResampleDataByPixelSpacing(1, 1, 1, Doc.PartialVolumeEffectInterpolation, Doc.PartialVolumeEffectInterpolation)
     
     # Select vertebrae mask & open and close it
     App.GetDocument().Threshold(20, 255, Doc.CreateNewMask, App.GetDocument().GetSliceIndices(Doc.OrientationYZ), Doc.OrientationYZ)
