@@ -1,8 +1,6 @@
 from scanip_api import *
 if InputDialog.AskYesNoQuestion('Align', 'Have you aligned the model?') == True:
     
-    App.GetDocument().GetBackgroundByName("Stack").SetActiveWindowLevel(WindowLevel.FromWindowLevel(255, 127.5))
-    
     #mask cement
     App.GetDocument().Threshold(62, 255, Doc.CreateNewMask, App.GetDocument().GetSliceIndices(Doc.OrientationYZ), Doc.OrientationYZ)
     
