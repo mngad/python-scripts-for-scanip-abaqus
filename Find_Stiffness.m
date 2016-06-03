@@ -1,5 +1,5 @@
 clear all;
-fileLoc = 'M:\Compression Tests\T8_CC3_beforeTest_12_04.is_comp_RawData\Specimen_RawData_1.csv'; %Directory to .csv
+fileLoc = 'M:\Compression Tests\T2_CC1_15.2.16_Tofailure.is_comp_RawData\Specimen_RawData_1.csv'; %Directory to .csv
 incrSize = 0.3;
 
 %find limits of plot ie. > 50 N to max
@@ -21,9 +21,9 @@ for incr=1:i-2
     if(load(incr)<=51)
         lower = num2str(incr);
     end
-    if(load(incr)<=1500)
-        upper = num2str(incr);
-    end
+     if(load(incr)<=5000)
+         upper = num2str(incr);
+     end
 end
 
 upper
