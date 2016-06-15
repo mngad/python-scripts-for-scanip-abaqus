@@ -2,7 +2,7 @@
 
 
 
-- **caeToStiffnessOutput_FOR_CEMENT.py**
+- **caeToStiffnessOutput.py**
 
   Runs all previously set up cae files and returns txt files with the stiffness
 
@@ -26,7 +26,7 @@
 
   Takes all .inp files along with positions in a .csv and sets up all boundary conditions and interactions for a 1 mm compression. For augmented models with an interface layer.
 
-- **caeToStiffnessOutput_FOR_CEMENT_DENSITY_CHANGE.py**
+- **caeToStiffnessOutput_DENSITY_CHANGE.py**
 
   Same as above but allows for the changing of the cement density.
 
