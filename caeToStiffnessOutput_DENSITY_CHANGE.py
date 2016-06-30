@@ -33,15 +33,16 @@ import displayGroupOdbToolset as dgo
 import connectorBehavior
 
 #=====================================================================
-#input_directory = 'D:\VP_SCAN\T1_CC3_T6_CC2_AfterVP_BA_#642_1487\Abaqus testing/'
-#output_directory = 'D:\VP_SCAN\T1_CC3_T6_CC2_AfterVP_BA_#642_1487\Abaqus testing/'
 input_directory = os.getcwd() + '/'
 output_directory = os.getcwd() + '/' #gets current directory
-#conversion_factory = 0.0135976641182
 conversion_factory = 0.012529
-#=====================================================================
 stiffness = ''
-percentageChange=0.8
+percentageChange=0.5
+noCPU=10
+noDomain=10
+mem=20000mb
+#=====================================================================
+
 
 def cleanup(mostrecent):
     print 'Clearing up - removing other loaded models and clearing job list'
@@ -86,7 +87,7 @@ def changeMatProp(myModel):
     #mdb.models[myModel].steps['loading_step'].setValues(nlgeom=ON)
     jobname = myModel + '_ABAQUS'
     myJob = mdb.Job(model=myModel, name=jobname)
-    myJob.setValues(numCpus=8,numDomains=8,multiprocessingMode=THREADS)
+    myJob.setValues(numCpus=noCPU,memory=mem,numDomains=noDomain,multiprocessingMode=THREADS)
     myJob.writeInput()
     mdb.saveAs(myJob.name)
 
