@@ -98,14 +98,14 @@ def changeMatProp(myModel):
         if mat.startswith('PM_CEMENT'):
             rho = int(myMat.density.table[0][0])
             if rho<1:rho=1
-            E = 2.45*cementMod
+            E = cementMod
             nu = 0.3
             del myMat.elastic
             myMat.Elastic(table=((E, nu), ))
         if mat.startswith('PM_INTERFACE'):
             rho = int(myMat.density.table[0][0])
             if rho<1:rho=1
-            E = 2.45*interfaceMod
+            E = interfaceMod
             nu = 0.3
             del myMat.elastic
             myMat.Elastic(table=((E, nu), ))

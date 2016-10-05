@@ -93,7 +93,7 @@ def alignPlaten(modelName, loadPoints):
     d1 = a1.datums
 
     counter = 0
-    for a in range(50):
+    for a in range(500):
         try:
             highlight(d1[a])
             counter = a
