@@ -26,7 +26,7 @@ plastic_behaviour = 0 # If 0, model configured elastic only. If 1, elastic plast
 yield_strain = 0.01
 
 def getfiles(mypath, filetype):
-    print 'Loading list of [chosen file type] files from chosen directory'
+    print >> sys.__stdout__, 'Loading list of [chosen file type] files from chosen directory'
     inpfilelist=[]
     onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f))]
     for files in onlyfiles:
@@ -35,7 +35,7 @@ def getfiles(mypath, filetype):
     return inpfilelist
 
 def getpart(modelname):
-    print 'Getting part and instance names'
+    print >> sys.__stdout__, 'Getting part and instance names'
     partname = mdb.models[modelname].parts.keys()
     partname = partname[0]
     instancename = mdb.models[modelname].rootAssembly.instances.keys()
@@ -43,7 +43,7 @@ def getpart(modelname):
     return partname, instancename
 
 def cleanup(mostrecent):
-    print 'Clearing up - removing other loaded models and clearing job list'
+    print >> sys.__stdout__, 'Clearing up - removing other loaded models and clearing job list'
     for model in mdb.models.keys():
         if len(mdb.models.keys()) == 1:
            break
@@ -54,14 +54,14 @@ def cleanup(mostrecent):
         del mdb.jobs[jobclean]
 
 def deleteinteractions(modelname):
-    print 'Deleting existing interactions'
+    print >> sys.__stdout__, 'Deleting existing interactions'
     for interaction in mdb.models[modelname].interactions.keys():
         del mdb.models[modelname].interactions[interaction]
     for interaction_property in mdb.models[modelname].interactionProperties.keys():
         del mdb.models[modelname].interactionProperties[interaction_property]
 
 def adjust_matprops(modelname, yield_strain):
-    print 'Adjusting element Youngs Modulus and yield stress...'
+    print >> sys.__stdout__, 'Adjusting element Youngs Modulus and yield stress...'
     materials = mdb.models[modelname].materials
     material_names = materials.keys()
     for current_mat in material_names:
@@ -79,7 +79,7 @@ def adjust_matprops(modelname, yield_strain):
                 mdb.models[modelname].materials[current_mat].Plastic(table=((new_yield_stress, 0.0), ))
 
 def instancePart(modelName, partName):
-    print 'Creating platen instance'
+    print >> sys.__stdout__, 'Creating platen instance'
     p = mdb.models[modelName].parts[partName]
     mdb.models[modelName].rootAssembly.Instance(name=(partName + '-1'), part=p, dependent=ON)
 
@@ -87,11 +87,11 @@ def alignPlaten(modelName, loadPoints):
     # Create a datum plane offset by 0 from the xy axis (ie, in the plane of the superior endcap surface)
     a = mdb.models[modelName].rootAssembly
     a.DatumPlaneByPrincipalPlane(principalPlane=XYPLANE, offset=loadPoints[2])
-    
+
     a1 = mdb.models[modelName].rootAssembly
     f1 = a1.instances['platen-1'].faces
     d1 = a1.datums
-    
+
     counter = 0
     for a in range(50):
         try:
@@ -99,7 +99,7 @@ def alignPlaten(modelName, loadPoints):
             counter = a
         except KeyError:
             continue
-    
+
     a1.FaceToFace(movablePlane=f1[0], fixedPlane=d1[counter], flip=OFF, clearance=0.0)
 
 def translatePlaten(modelName, loadPoints):
@@ -107,7 +107,7 @@ def translatePlaten(modelName, loadPoints):
     a.translate(instanceList=('platen-1', ), vector=(loadPoints[0], loadPoints[1], loadPoints[2]))
 
 def createAnalyticalPlate(modelName, radius):
-    s = mdb.models[modelName].ConstrainedSketch(name='__profile__', 
+    s = mdb.models[modelName].ConstrainedSketch(name='__profile__',
     sheetSize=(radius * 2.0))
     g, v, d, c = s.geometry, s.vertices, s.dimensions, s.constraints
     s.setPrimaryObject(option=STANDALONE)
@@ -115,7 +115,7 @@ def createAnalyticalPlate(modelName, radius):
     s.FixedConstraint(entity=g[2])
     s.Line(point1=(0.0, 0.0), point2=(radius, 0.0))
     s.HorizontalConstraint(entity=g[3], addUndoState=False)
-    p = mdb.models[modelName].Part(name='platen', 
+    p = mdb.models[modelName].Part(name='platen',
     dimensionality=THREE_D, type=ANALYTIC_RIGID_SURFACE)
     p = mdb.models[modelName].parts['platen']
     p.AnalyticRigidSurfRevolve(sketch=s)
@@ -128,10 +128,10 @@ def createAnalyticalPlate(modelName, radius):
     p.ReferencePoint(point=v1[1])
 
 def applybcs(modelname, setName, disp):
-    print 'Applying boundary conditions'
+    print >> sys.__stdout__, 'Applying boundary conditions'
     region = mdb.models[modelname].rootAssembly.sets[setName]
     mdb.models[modelname].EncastreBC(name='ENCASTRE', createStepName='Initial', region=region)
-    
+
     a = mdb.models[modelname].rootAssembly
     r1 = a.instances['platen-1'].referencePoints
     refPoints1=(r1[2], )
@@ -139,7 +139,7 @@ def applybcs(modelname, setName, disp):
     mdb.models[modelname].DisplacementBC(name='displacement', createStepName='loading_step', region=region, u1=0.0, u2=0.0, u3=disp, amplitude=UNSET, fixed=OFF, distributionType=UNIFORM, fieldName='', localCsys=None)
 
 def meshTies(modelName):
-    print 'Applying internal constraints'
+    print >> sys.__stdout__, 'Applying internal constraints'
     surfaces = mdb.models[modelName].rootAssembly.surfaces.keys()
     superiorslave_entry = []
     superiormaster_entry = []
@@ -168,60 +168,60 @@ def meshTies(modelName):
            interfaceInnerMaster_entry = current_entry
         if current_entry.endswith("SF_INTERFACE_WITH_CEMENT"):
            interfaceInnerSlave_entry = current_entry
-        
+
 
     superiormaster = mdb.models[modelName].rootAssembly.surfaces[superiormaster_entry]
     superiorslave = mdb.models[modelName].rootAssembly.surfaces[superiorslave_entry]
     inferiormaster = mdb.models[modelName].rootAssembly.surfaces[inferiormaster_entry]
     inferiorslave = mdb.models[modelName].rootAssembly.surfaces[inferiorslave_entry]
-    interfaceInnerMaster = mdb.models[modelName].rootAssembly.surfaces[interfaceInnerMaster_entry] 
+    interfaceInnerMaster = mdb.models[modelName].rootAssembly.surfaces[interfaceInnerMaster_entry]
     interfaceInnerSlave = mdb.models[modelName].rootAssembly.surfaces[interfaceInnerSlave_entry]
     interfaceOuterMaster = mdb.models[modelName].rootAssembly.surfaces[interfaceOuterMaster_entry]
     interfaceOuterSlave = mdb.models[modelName].rootAssembly.surfaces[interfaceOuterSlave_entry]
 
-    mdb.models[modelName].Tie(name='Superior_endcap_tie', master=superiormaster, slave=superiorslave, positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, thickness=ON)    
+    mdb.models[modelName].Tie(name='Superior_endcap_tie', master=superiormaster, slave=superiorslave, positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, thickness=ON)
     mdb.models[modelName].Tie(name='Inferior_endcap_tie', master=inferiormaster, slave=inferiorslave, positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, thickness=ON)
     mdb.models[modelName].Tie(name='cement_interface_tie', master=interfaceInnerMaster, slave=interfaceInnerSlave, positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, thickness=ON)
     mdb.models[modelName].Tie(name='interface_vert_tie', master=interfaceOuterMaster, slave=interfaceOuterSlave, positionToleranceMethod=COMPUTED, adjust=ON, tieRotations=ON, thickness=ON)
-    
-    
-    
-    
+
+
+
+
     a = mdb.models[modelName].rootAssembly
     s1 = a.instances['platen-1'].faces
     side1Faces1 = s1.getSequenceFromMask(mask=('[#1 ]', ), )
     region1=regionToolset.Region(side1Faces=side1Faces1)
     region2=a.surfaces['SF_SUPERIOR_ENDCAP_WITH_ZMAX']
-    mdb.models[modelName].Tie(name='platen_constraint', master=region1, 
-        slave=region2, positionToleranceMethod=COMPUTED, adjust=ON, 
+    mdb.models[modelName].Tie(name='platen_constraint', master=region1,
+        slave=region2, positionToleranceMethod=COMPUTED, adjust=ON,
         tieRotations=ON, thickness=ON)
 
 
 def saveinpcae(modelname, outputpath):
-    print 'Creating job'
+    print >> sys.__stdout__, 'Creating job'
     jobname = modelname+ 'setup'
     print jobname
     mdb.Job(name=jobname, model=modelname, description='', type=ANALYSIS, atTime=None, waitMinutes=0, waitHours=0, queue=None, memory=50, memoryUnits=PERCENTAGE, getMemoryFromAnalysis=True, explicitPrecision=SINGLE, nodalOutputPrecision=SINGLE, echoPrint=OFF, modelPrint=OFF, contactPrint=OFF, historyPrint=OFF, userSubroutine='', scratch='', parallelizationMethodExplicit=DOMAIN, multiprocessingMode=DEFAULT, numDomains=1, numCpus=1)
     os.chdir(outputpath)
-    print 'Saving .cae file'
+    print >> sys.__stdout__, 'Saving .cae file'
     mdb.saveAs(pathName=os.path.join(outputpath, modelname))
-    print 'Writing .inp file'
+    print >> sys.__stdout__, 'Writing .inp file'
     mdb.jobs[jobname].writeInput(consistencyChecking=OFF)
 
 def loadLoadPointCsv(csvFilePath, modelName):
     loadData = []
-    
+
     with open(csvFilePath, 'rb') as csvfile:
         spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
         for row in spamreader:
             loadData.append(row)
-    
+
     loadPoints = [0.0, 0.0, 0.0]
     for searchModel in loadData:
         if modelName.startswith(searchModel[0]):
             loadPoints[0] = float(searchModel[1])
             loadPoints[1] = float(searchModel[2])
-            loadPoints[2] = float(searchModel[3])-1.0
+            loadPoints[2] = float(searchModel[3])
     return loadPoints
 
 # --- Main loop ---
@@ -240,14 +240,14 @@ if inp_list:
         current_part, current_instance = getpart(current_model)
         # Delete all interactions present in the imported model
         deleteinteractions(current_model)
-        # Create a new loading step    
+        # Create a new loading step
         #mdb.models[current_model].StaticStep(name=stepName, previous='Initial', nlgeom=OFF)
         mdb.models[current_model].StaticStep(name=stepName, previous='Initial', maxNumInc=100, initialInc=0.025, minInc=0.025, maxInc=0.025, nlgeom=ON)
         # Create an analytical rigid plate
         createAnalyticalPlate(current_model, analytical_plate_radius)
         # Instance the analytical rigid plate
         instancePart(current_model, 'platen')
-        # Create the tie constraints within the model   
+        # Create the tie constraints within the model
         meshTies(current_model)
         # Create the datum surface along which the platen will be aligned and align it
         # Load the load position data from the csv file and translate the platen centre to this position
@@ -261,5 +261,5 @@ if inp_list:
         # Create a job and save the reconfigured model as a .cae file
         saveinpcae(current_model, output_directory)
 else:
-    print 'There are no .inp files in the chosen directory.'
+    print >> sys.__stdout__, 'There are no .inp files in the chosen directory.'
 
