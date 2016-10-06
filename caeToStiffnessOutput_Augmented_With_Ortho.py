@@ -102,13 +102,6 @@ def changeMatProp(myModel):
             nu = 0.3
             del myMat.elastic
             myMat.Elastic(table=((E, nu), ))
-        if mat.startswith('PM_INTERFACE'):
-            rho = int(myMat.density.table[0][0])
-            if rho<1:rho=1
-            E = interfaceMod
-            nu = 0.3
-            del myMat.elastic
-            myMat.Elastic(table=((E, nu), ))
     #mdb.models[myModel].steps['loading_step'].setValues(nlgeom=ON)
     jobname = myModel + '_ABAQUS'
     myJob = mdb.Job(model=myModel, name=jobname)
@@ -154,8 +147,8 @@ def combineToOneFile():
             txtList.append(files)
     arrayOfStiffness = []
     o = open('allStiffness.txt', 'w')
-    o.write('Interface Stiffness: ' + str(2.45*percentageChange_Interface) + ' GPa \n')
-    o.write('Cement Stiffness: ' + str(2.45*percentageChange) + ' GPa \n')
+    o.write('Interface Stiffness: ' + str(interfaceMod) + ' GPa \n')
+    o.write('Cement Stiffness: ' + str(cementMod) + ' GPa \n')
     for currentfile in txtList:
         f = open(currentfile, 'r')
         i=0
