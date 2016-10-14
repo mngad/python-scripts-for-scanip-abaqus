@@ -36,8 +36,6 @@ input_directory = os.getcwd() + '/'
 output_directory = os.getcwd() + '/' #gets current directory
 stiffness = ''
 
-
-
 def getfiles(mypath, filetype):
     print >> sys.__stdout__, 'Loading list of [chosen file type] files from chosen directory'
     caefilelist=[]
@@ -46,7 +44,6 @@ def getfiles(mypath, filetype):
         if files.endswith(filetype):
            caefilelist.append(files)
     return caefilelist
-
 
 def outputStiffness(modelNameforstiffness):
     from abaqusConstants import *
@@ -65,7 +62,7 @@ def outputStiffness(modelNameforstiffness):
     del session.xyDataObjects['RF:RF3 PI: PLATEN-1 N: 1']
 
 def combineToOneFile():
-#horrible function to combine all the files with stiffnesses into one file
+    #horrible function to combine all the files with stiffnesses into one file
     os.chdir(output_directory)
     txtList = []
     allfiles = [f for f in listdir(output_directory) if isfile(join(output_directory,f))]
@@ -74,8 +71,6 @@ def combineToOneFile():
             txtList.append(files)
     arrayOfStiffness = []
     o = open('allStiffness.txt', 'w')
-    o.write('Interface Stiffness: ' + str(interfaceMod) + ' GPa \n')
-    o.write('Cement Stiffness: ' + str(cementMod) + ' GPa \n')
     for currentfile in txtList:
         f = open(currentfile, 'r')
         i=0
@@ -96,16 +91,9 @@ def main():
         for i, current_file in enumerate(cae_list):
             current_model = current_file[:-4]
             # Import the next model in the folder
-            #mdb.ModelFromInputFile(name = current_model, inputFileName = os.path.join(input_directory, current_file))
-            openMdb(pathName= input_directory + current_file)
-            a = mdb.models[current_model].rootAssembly
-            session.viewports['Viewport: 1'].setValues(displayedObject=a)
-            a = mdb.models[current_model].rootAssembly
-            session.viewports['Viewport: 1'].setValues(displayedObject=a)
-
             outputStiffness(current_model)
-        else:
-            print >> sys.__stdout__, 'No Files in Dir'
+    else:
+        print >> sys.__stdout__, 'No Files in Dir'
     combineToOneFile()
 
 main()

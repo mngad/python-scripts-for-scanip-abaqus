@@ -35,7 +35,6 @@ import connectorBehavior
 input_directory = os.getcwd() + '/'
 output_directory = os.getcwd() + '/' #gets current directory
 
-
 def cleanup(mostrecent):
     print >> sys.__stdout__, 'Clearing up - removing other loaded models and clearing job list'
     for model in mdb.models.keys():
@@ -56,19 +55,15 @@ def getfiles(mypath, filetype):
            caefilelist.append(files)
     return caefilelist
 
-
 def runJob(modelname):
     from abaqusConstants import *
     from abaqus import *
     import step
     jobname = modelname + '_ABAQUS'
-
     mdb.models[modelname].steps['loading_step'].setValues(initialInc=0.1, minInc=0.0001, maxInc=1)
     mdb.jobs[jobname].submit(consistencyChecking=OFF)
     #wait for job to complete before opening the odb and checking the stiffness
     mdb.jobs[jobname].waitForCompletion()
-
-
 
 def main():
     os.chdir(output_directory)
@@ -79,13 +74,8 @@ def main():
             current_model = current_file[:-4]
             # Import the next model in the folder
             openMdb(pathName= input_directory + current_file)
-            a = mdb.models[current_model].rootAssembly
-            session.viewports['Viewport: 1'].setValues(displayedObject=a)
-            a = mdb.models[current_model].rootAssembly
-            session.viewports['Viewport: 1'].setValues(displayedObject=a)
             # Delete all models except the one just imported, and delete all present jobs
             cleanup(current_model)
-            changeMatProp(current_model)
             runJob(current_model)
         else:
             print >> sys.__stdout__, 'No Files in Dir'
