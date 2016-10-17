@@ -35,7 +35,6 @@ import connectorBehavior
 input_directory = os.getcwd() + '/'
 output_directory = os.getcwd() + '/' #gets current directory
 
-
 def cleanup(mostrecent):
     print >> sys.__stdout__, 'Clearing up - removing other loaded models and clearing job list'
     for model in mdb.models.keys():
@@ -56,7 +55,6 @@ def getfiles(mypath, filetype):
            caefilelist.append(files)
     return caefilelist
 
-
 def runJob(modelname):
     from abaqusConstants import *
     from abaqus import *
@@ -71,8 +69,6 @@ def runJob(modelname):
     myJob.submit(consistencyChecking=OFF)
     #wait for job to complete before opening the odb and checking the stiffness
     myJob.waitForCompletion()
-
-
 
 def main():
     os.chdir(output_directory)

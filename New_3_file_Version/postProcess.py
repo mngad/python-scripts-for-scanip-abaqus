@@ -36,8 +36,6 @@ input_directory = os.getcwd() + '/'
 output_directory = os.getcwd() + '/' #gets current directory
 stiffness = ''
 
-
-
 def getfiles(mypath, filetype):
     print >> sys.__stdout__, 'Loading list of [chosen file type] files from chosen directory'
     caefilelist=[]
@@ -46,7 +44,6 @@ def getfiles(mypath, filetype):
         if files.endswith(filetype):
            caefilelist.append(files)
     return caefilelist
-
 
 def outputStiffness(modelNameforstiffness):
     from abaqusConstants import *
@@ -65,7 +62,7 @@ def outputStiffness(modelNameforstiffness):
     del session.xyDataObjects['RF:RF3 PI: PLATEN-1 N: 1']
 
 def combineToOneFile():
-#horrible function to combine all the files with stiffnesses into one file
+    #horrible function to combine all the files with stiffnesses into one file
     os.chdir(output_directory)
     txtList = []
     allfiles = [f for f in listdir(output_directory) if isfile(join(output_directory,f))]
@@ -93,9 +90,13 @@ def main():
     if cae_list:
         for i, current_file in enumerate(cae_list):
             current_model = current_file[:-4]
+<<<<<<< HEAD
+=======
+            # Import the next model in the folder
+>>>>>>> 48ec4f7d5ffce03546d5f66850c225f8850fb56d
             outputStiffness(current_model)
-        else:
-            print >> sys.__stdout__, 'No Files in Dir'
+    else:
+        print >> sys.__stdout__, 'No Files in Dir'
     combineToOneFile()
 
 main()
