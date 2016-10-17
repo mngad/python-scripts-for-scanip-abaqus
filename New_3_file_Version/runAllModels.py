@@ -62,11 +62,15 @@ def runJob(modelname):
     from abaqus import *
     import step
     jobname = modelname + '_ABAQUS'
-
+    myJob = mdb.Job(model=modelname, name=jobname)
+    myJob.setValues(numCpus=8,numDomains=8,multiprocessingMode=THREADS)
+    myJob.writeInput()
+    mdb.saveAs(myJob.name)
+    print >> sys.__stdout__, jobname
     mdb.models[modelname].steps['loading_step'].setValues(initialInc=0.1, minInc=0.0001, maxInc=1)
-    mdb.jobs[jobname].submit(consistencyChecking=OFF)
+    myJob.submit(consistencyChecking=OFF)
     #wait for job to complete before opening the odb and checking the stiffness
-    mdb.jobs[jobname].waitForCompletion()
+    myJob.waitForCompletion()
 
 
 
@@ -79,13 +83,8 @@ def main():
             current_model = current_file[:-4]
             # Import the next model in the folder
             openMdb(pathName= input_directory + current_file)
-            a = mdb.models[current_model].rootAssembly
-            session.viewports['Viewport: 1'].setValues(displayedObject=a)
-            a = mdb.models[current_model].rootAssembly
-            session.viewports['Viewport: 1'].setValues(displayedObject=a)
             # Delete all models except the one just imported, and delete all present jobs
             cleanup(current_model)
-            changeMatProp(current_model)
             runJob(current_model)
         else:
             print >> sys.__stdout__, 'No Files in Dir'

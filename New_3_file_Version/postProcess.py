@@ -52,7 +52,7 @@ def outputStiffness(modelNameforstiffness):
     from abaqusConstants import *
     from abaqus import *
     print >> sys.__stdout__, 'Outputting stiffness for model' + modelNameforstiffness
-    odb = session.openOdb(name= input_directory + modelNameforstiffness + '_ABAQUS.odb')
+    odb = session.openOdb(name= input_directory + modelNameforstiffness + '.odb')
     #odb = session.odbs[modelNameforstiffness + '_ABAQUS.odb' ]
     session.viewports['Viewport: 1'].setValues(displayedObject=odb)
     session.xyDataListFromField(odb=odb, outputPosition=NODAL, variable=(('RF',NODAL, ((COMPONENT, 'RF3'), )), ), nodeSets=('REFERENCE_POINT_PLATEN-1        1', ))
@@ -74,8 +74,6 @@ def combineToOneFile():
             txtList.append(files)
     arrayOfStiffness = []
     o = open('allStiffness.txt', 'w')
-    o.write('Interface Stiffness: ' + str(interfaceMod) + ' GPa \n')
-    o.write('Cement Stiffness: ' + str(cementMod) + ' GPa \n')
     for currentfile in txtList:
         f = open(currentfile, 'r')
         i=0
@@ -91,18 +89,10 @@ def combineToOneFile():
 def main():
     os.chdir(output_directory)
     cae_list = []
-    cae_list = getfiles(input_directory, ".cae")
+    cae_list = getfiles(input_directory, "_ABAQUS.cae")
     if cae_list:
         for i, current_file in enumerate(cae_list):
             current_model = current_file[:-4]
-            # Import the next model in the folder
-            #mdb.ModelFromInputFile(name = current_model, inputFileName = os.path.join(input_directory, current_file))
-            openMdb(pathName= input_directory + current_file)
-            a = mdb.models[current_model].rootAssembly
-            session.viewports['Viewport: 1'].setValues(displayedObject=a)
-            a = mdb.models[current_model].rootAssembly
-            session.viewports['Viewport: 1'].setValues(displayedObject=a)
-
             outputStiffness(current_model)
         else:
             print >> sys.__stdout__, 'No Files in Dir'

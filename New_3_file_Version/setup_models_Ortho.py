@@ -94,11 +94,6 @@ def changeMatProp(myModel):
             del myMat.elastic
             myMat.Elastic(table=((E, nu), ))
     #mdb.models[myModel].steps['loading_step'].setValues(nlgeom=ON)
-    jobname = myModel + '_ABAQUS'
-    myJob = mdb.Job(model=myModel, name=jobname)
-    myJob.setValues(numCpus=8,numDomains=8,multiprocessingMode=THREADS)
-    myJob.writeInput()
-    mdb.saveAs(myJob.name)
 
 def getpart(modelname):
     print >> sys.__stdout__, 'Getting part and instance names'
