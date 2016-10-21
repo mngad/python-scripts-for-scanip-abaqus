@@ -63,10 +63,10 @@ def getfiles(mypath, filetype):
 def changeMatProp(myModel):
 
 
-    mdb.models[myModel].materials['PM_INTERFACE_HMG'].Plastic(
-        table=((0.0065, 0.0), ))
     mdb.models[myModel].materials['PM_INTERFACE_HMG'].elastic.setValues(
         table=((1.715, 0.3), ), type=ISOTROPIC)
+    mdb.models[myModel].materials['PM_INTERFACE_HMG'].Plastic(
+        table=((0.00005, 0.0), ))
     mdb.models[myModel].materials
     for mat in mdb.models[myModel].materials.keys():
         myMat = mdb.models[myModel].materials[mat]
@@ -204,17 +204,17 @@ def meshTies(modelName):
 
 
     for current_entry in surfaces:
-        if current_entry.startswith("SF_INFERIOR_ENDCAP_WITH_VERTEBRAE"):
+        if current_entry.startswith("SF_INFERIOR_ENDCAP_WITH_VERTEBRA"):
            inferiormaster_entry = current_entry
-        if current_entry.startswith("SF_SUPERIOR_ENDCAP_WITH_VERTEBRAE"):
+        if current_entry.startswith("SF_SUPERIOR_ENDCAP_WITH_VERTEBRA"):
            superiormaster_entry = current_entry
         if current_entry.endswith("INFERIOR_ENDCAP"):
            inferiorslave_entry = current_entry
         if current_entry.endswith("SUPERIOR_ENDCAP"):
            superiorslave_entry = current_entry
-        if current_entry.endswith("SF_VERTEBRAE_WITH_INTERFACE"):
+        if current_entry.endswith("SF_VERTEBRA_WITH_INTERFACE"):
            interfaceOuterSlave_entry = current_entry
-        if current_entry.endswith("SF_INTERFACE_WITH_VERTEBRAE"):
+        if current_entry.endswith("SF_INTERFACE_WITH_VERTEBRA"):
            interfaceOuterMaster_entry = current_entry
         if current_entry.endswith("SF_CEMENT_WITH_INTERFACE"):
            interfaceInnerMaster_entry = current_entry
@@ -257,8 +257,8 @@ def saveinpcae(modelname, outputpath):
     os.chdir(outputpath)
     print >> sys.__stdout__, 'Saving .cae file'
     mdb.saveAs(pathName=os.path.join(outputpath, modelname))
-    print >> sys.__stdout__, 'Writing .inp file'
-    mdb.jobs[jobname].writeInput(consistencyChecking=OFF)
+    #print >> sys.__stdout__, 'Writing .inp file'
+   # mdb.jobs[jobname].writeInput(consistencyChecking=OFF)
 
 def loadLoadPointCsv(csvFilePath, modelName):
     loadData = []
@@ -311,28 +311,12 @@ def main():
             # Check for any materials with zero density, if found replace with 1 density
             adjust_matprops(current_model, yield_strain)
             # Create a job and save the reconfigured model as a .cae file
+            changeMatProp(current_model)
             saveinpcae(current_model, output_directory)
+
 
     else:
         print >> sys.__stdout__, 'There are no .inp files in the chosen directory.'
 
-    os.chdir(output_directory)
-    cae_list = []
-    cae_list = getfiles(input_directory, ".cae")
-    if cae_list:
-        for i, current_file in enumerate(cae_list):
-            current_model = current_file[:-4]
-            # Import the next model in the folder
-            #mdb.ModelFromInputFile(name = current_model, inputFileName = os.path.join(input_directory, current_file))
-            openMdb(pathName= input_directory + current_file)
-            a = mdb.models[current_model].rootAssembly
-            session.viewports['Viewport: 1'].setValues(displayedObject=a)
-            a = mdb.models[current_model].rootAssembly
-            session.viewports['Viewport: 1'].setValues(displayedObject=a)
-            # Delete all models except the one just imported, and delete all present jobs
-            cleanup(current_model)
-            changeMatProp(current_model)
-        else:
-            print >> sys.__stdout__, 'No Files in Dir'
 
 main()
