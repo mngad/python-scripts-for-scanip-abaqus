@@ -90,10 +90,6 @@ def main():
     if cae_list:
         for i, current_file in enumerate(cae_list):
             current_model = current_file[:-4]
-<<<<<<< HEAD
-=======
-            # Import the next model in the folder
->>>>>>> 48ec4f7d5ffce03546d5f66850c225f8850fb56d
             outputStiffness(current_model)
     else:
         print >> sys.__stdout__, 'No Files in Dir'
