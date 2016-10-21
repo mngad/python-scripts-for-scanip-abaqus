@@ -266,8 +266,8 @@ def saveinpcae(modelname, outputpath):
     os.chdir(outputpath)
     print >> sys.__stdout__, 'Saving .cae file'
     mdb.saveAs(pathName=os.path.join(outputpath, modelname))
-    print >> sys.__stdout__, 'Writing .inp file'
-    mdb.jobs[jobname].writeInput(consistencyChecking=OFF)
+    #print >> sys.__stdout__, 'Writing .inp file'
+    #mdb.jobs[jobname].writeInput(consistencyChecking=OFF)
 
 def loadLoadPointCsv(csvFilePath, modelName):
     loadData = []
@@ -320,28 +320,12 @@ def main():
             # Check for any materials with zero density, if found replace with 1 density
             adjust_matprops(current_model, yield_strain)
             # Create a job and save the reconfigured model as a .cae file
+            changeMatProp(current_model)
             saveinpcae(current_model, output_directory)
+
 
     else:
         print >> sys.__stdout__, 'There are no .inp files in the chosen directory.'
 
-    os.chdir(output_directory)
-    cae_list = []
-    cae_list = getfiles(input_directory, ".cae")
-    if cae_list:
-        for i, current_file in enumerate(cae_list):
-            current_model = current_file[:-4]
-            # Import the next model in the folder
-            #mdb.ModelFromInputFile(name = current_model, inputFileName = os.path.join(input_directory, current_file))
-            openMdb(pathName= input_directory + current_file)
-            a = mdb.models[current_model].rootAssembly
-            session.viewports['Viewport: 1'].setValues(displayedObject=a)
-            a = mdb.models[current_model].rootAssembly
-            session.viewports['Viewport: 1'].setValues(displayedObject=a)
-            # Delete all models except the one just imported, and delete all present jobs
-            cleanup(current_model)
-            changeMatProp(current_model)
-        else:
-            print >> sys.__stdout__, 'No Files in Dir'
 
 main()
