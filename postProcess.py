@@ -75,7 +75,7 @@ def combineToOneFile():
         f = open(currentfile, 'r')
         i=0
         for line in f:
-            if i == 10:
+            if "     1." in line:
                 print >> sys.__stdout__, line
                 o.write(currentfile[:-4] + ': ' + line[35:])
                 arrayOfStiffness.append(line)
