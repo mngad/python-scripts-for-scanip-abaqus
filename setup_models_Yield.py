@@ -63,10 +63,8 @@ def getfiles(mypath, filetype):
 def changeMatProp(myModel):
 
 
-    mdb.models[myModel].materials['PM_INTERFACE_HMG'].elastic.setValues(
-        table=((1.715, 0.3), ), type=ISOTROPIC)
-    mdb.models[myModel].materials['PM_INTERFACE_HMG'].Plastic(
-        table=((0.00005, 0.0), ))
+#    mdb.models[myModel].materials['PM_INTERFACE_HMG'].elastic.setValues(table=((1.715, 0.3), ), type=ISOTROPIC)
+#    mdb.models[myModel].materials['PM_INTERFACE_HMG'].Plastic(table=((0.00005, 0.0), ))
     mdb.models[myModel].materials
     for mat in mdb.models[myModel].materials.keys():
         myMat = mdb.models[myModel].materials[mat]
@@ -77,6 +75,11 @@ def changeMatProp(myModel):
             nu = 0.3
             del myMat.elastic
             myMat.Elastic(table=((E, nu), ))
+        if mat.startswith('PM_INTERFACE'):
+            del myMat.elastic
+            del myMat.plastic
+            myMat.Elastic(table=((1.715, 0.3), ), type=ISOTROPIC)
+            myMat.Plastic(table=((0.00001, 0.0), ))
         if mat.startswith('PM_CEMENT'):
             rho = int(myMat.density.table[0][0])
             if rho<1:rho=1
@@ -204,17 +207,17 @@ def meshTies(modelName):
 
 
     for current_entry in surfaces:
-        if current_entry.startswith("SF_INFERIOR_ENDCAP_WITH_VERTEBRA"):
+        if current_entry.startswith("SF_INFERIOR_ENDCAP_WITH_VERTEBRAE"):
            inferiormaster_entry = current_entry
-        if current_entry.startswith("SF_SUPERIOR_ENDCAP_WITH_VERTEBRA"):
+        if current_entry.startswith("SF_SUPERIOR_ENDCAP_WITH_VERTEBRAE"):
            superiormaster_entry = current_entry
         if current_entry.endswith("INFERIOR_ENDCAP"):
            inferiorslave_entry = current_entry
         if current_entry.endswith("SUPERIOR_ENDCAP"):
            superiorslave_entry = current_entry
-        if current_entry.endswith("SF_VERTEBRA_WITH_INTERFACE"):
+        if current_entry.endswith("SF_VERTEBRAE_WITH_INTERFACE"):
            interfaceOuterSlave_entry = current_entry
-        if current_entry.endswith("SF_INTERFACE_WITH_VERTEBRA"):
+        if current_entry.endswith("SF_INTERFACE_WITH_VERTEBRAE"):
            interfaceOuterMaster_entry = current_entry
         if current_entry.endswith("SF_CEMENT_WITH_INTERFACE"):
            interfaceInnerMaster_entry = current_entry

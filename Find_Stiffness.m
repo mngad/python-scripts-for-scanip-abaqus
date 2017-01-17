@@ -1,6 +1,6 @@
 clear all;
-fileLoc = 'M:\Compression Tests\T2_CC1_15.2.16_Tofailure.is_comp_RawData\Specimen_RawData_1.csv'; %Directory to .csv
-incrSize = 0.3;
+fileLoc = 'M:\HT_Compression_Usable_Set\G21-11_L2_PostVP_2000N.is_comp_RawData/Specimen_RawData_1.csv'; %Directory to .csv
+incrSize = 0.1;
 
 %find limits of plot ie. > 50 N to max
 
@@ -51,7 +51,7 @@ for aa=0:0.1:b %from a to last displacement section in 0.1s
     if aa==0
         s(count) = y(N2)/x(N2);
     else
-    s(count)=(y(N2)-y(N1))/(x(N2)-x(N1));
+        s(count)=(y(N2)-y(N1))/(x(N2)-x(N1));
     end
 end
 
