@@ -1,5 +1,5 @@
 clear all;
-incrSize = 0.2;
+incrSize = 0.6;
 fileDirLoc = 'M:\HT_Compression_Usable_Set\'; %Directory to .csv
 allSubFolders = genpath(fileDirLoc);
 % Scan through them separating them.

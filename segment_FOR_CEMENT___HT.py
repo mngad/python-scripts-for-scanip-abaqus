@@ -1,11 +1,11 @@
 from scanip_api import *
 
-if InputDialog.AskYesNoQuestion('Align', 'Have you aligned the model?') == True:
+if InputDialog.AskYesNoQuestion('Align', 'Have you aligned the model and segmented the cement at full res') == True:
 
 	doc=App.GetDocument()
 
 	#downsample to 1x1x1
-	#doc.ResampleDataByPixelSpacing(1, 1, 1, doc.PartialVolumeEffectInterpolation, doc.PartialVolumeEffectInterpolation)
+	doc.ResampleDataByPixelSpacing(1, 1, 1, doc.PartialVolumeEffectInterpolation, doc.PartialVolumeEffectInterpolation)
 
 	# Select vertebrae mask & open and close it
 	doc.Threshold(17, 255, Doc.CreateNewMask, doc.GetSliceIndices(Doc.OrientationYZ), Doc.OrientationYZ)
@@ -21,12 +21,12 @@ if InputDialog.AskYesNoQuestion('Align', 'Have you aligned the model?') == True:
 	doc.GetActiveMask().Duplicate()
 
 	# Rename all masks
-	doc.GetMaskByName("Mask 1").Activate()
-	doc.GetMaskByName("Mask 1").SetName("Vertebra")
 	doc.GetMaskByName("Mask 2").Activate()
-	doc.GetMaskByName("Mask 2").SetName("Inferior_endcap")
-	doc.GetMaskByName("Copy of Mask 2").Activate()
-	doc.GetMaskByName("Copy of Mask 2").SetName("Superior_endcap")
+	doc.GetMaskByName("Mask 2").SetName("Vertebra")
+	doc.GetMaskByName("Mask 3").Activate()
+	doc.GetMaskByName("Mask 3").SetName("Inferior_endcap")
+	doc.GetMaskByName("Copy of Mask 3").Activate()
+	doc.GetMaskByName("Copy of Mask 3").SetName("Superior_endcap")
 
 	# Subtract masks from each other
 	doc.GetMaskByName("Inferior_endcap").Activate()
@@ -107,3 +107,4 @@ if InputDialog.AskYesNoQuestion('Align', 'Have you aligned the model?') == True:
 	App.GetInstance().ShowMessage('Separate endcaps, crop and remove spinal canal cement')
 else:
 	App.GetInstance().ShowMessage('Align first')
+
