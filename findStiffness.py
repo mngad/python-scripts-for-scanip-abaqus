@@ -28,10 +28,6 @@ for folder in listOfFolderNames:
      # finds stiffness
 
     s = 0
-
-    s=0
-
-
     MaxS =0
     lower = 0
     upper = 0
@@ -39,7 +35,7 @@ for folder in listOfFolderNames:
          #max{n} = 0
     m=0
      #
-    fileLoc =  folder + '/Specimen_RawmaxXIndexata_1.csv'
+    fileLoc =  folder + '/Specimen_RawData_1.csv'
     data = pandas.read_csv(fileLoc,header = 2)
 
 
@@ -58,11 +54,11 @@ for folder in listOfFolderNames:
      #plot(x,y)
     #maxXIndex=max(maxXIndexi) #Finds max index value
     m=max(x) #finds max displacement value
-   maxXIndex = x.index(m)
+    maxXIndex = x.index(m)
     bb=m-incrSize #finds beginning value of last displacement section
-    b=(roundn(bb,1))-0.1 #rounds to nearest 0.1 (10^-1) and takes 0.1 so the last chunk is always a full 0.6
+    b=(round(bb,1))-0.1 #rounds to nearest 0.1 (10^-1) and takes 0.1 so the last chunk is always a full 0.6
     count=0 #starts an integer count
-    for aa=0:0.1:b  #from a to last displacement section in 0.1s
+    for aa in [float(j) / 10 for j in range(0, b, 1)]:
         count=count+1 #count increase by 1 each loop
         f1 = m/aa #finds division value required to get corresponding index for the given lower disp. bound
         f2=m/incrSize+aa #same for upper disp bound
