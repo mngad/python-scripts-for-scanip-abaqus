@@ -1,9 +1,10 @@
 import os
 import pandas
-
-incrSize = 0.2
+import pyperclip as pc
+incrSize = 0.1
 filemaxXIndexirLoc = "M:/HT_Compression_Usable_Set/"  #maxXIndexirectory to .csv
-os.setcwd(filemaxXIndexirLoc)
+allRes = ''
+os.chdir(filemaxXIndexirLoc)
  # Scan through them separating them.
 listOfFolderNames = os.listdir(filemaxXIndexirLoc)
 
@@ -27,7 +28,7 @@ for folder in listOfFolderNames:
     N2=0 #as integer
      # finds stiffness
 
-    s = 0
+    s =[]
     MaxS =0
     lower = 0
     upper = 0
@@ -36,44 +37,46 @@ for folder in listOfFolderNames:
     m=0
      #
     fileLoc =  folder + '/Specimen_RawData_1.csv'
-    data = pandas.read_csv(fileLoc,header = 2)
+    data = pandas.read_csv(fileLoc,header = 1)
 
-
-    load = list(data.b)
+    countr =0
+    load = list(data['(N)'])
     for i in load:
-        if(i<=51)
-            lower = data.b.index(i)
+        if(i<=51):
+            lower = countr
+        countr = countr + 1
 
-
-
-    x = data.a
-    y = data.b
-     #only read data from after the pre-cycling
-    #Fi=find(y)
-    #maxXIndexi=find(x) #finds all index values for x and y
-     #plot(x,y)
-    #maxXIndex=max(maxXIndexi) #Finds max index value
+    xdata = data['(mm)']
+    ydata = data['(N)']
+    x = xdata.tolist()
+    y = ydata.tolist()
+    x = x[lower:]
+    y = y[lower:]
     m=max(x) #finds max displacement value
     maxXIndex = x.index(m)
     bb=m-incrSize #finds beginning value of last displacement section
     b=(round(bb,1))-0.1 #rounds to nearest 0.1 (10^-1) and takes 0.1 so the last chunk is always a full 0.6
     count=0 #starts an integer count
-    for aa in [float(j) / 10 for j in range(0, b, 1)]:
+    aa = 0
+    while aa < b:
         count=count+1 #count increase by 1 each loop
         f1 = m/aa #finds division value required to get corresponding index for the given lower disp. bound
         f2=m/incrSize+aa #same for upper disp bound
         n1=maxXIndex/f1  #finds corresponding index at lower disp bound
-        N1=round(n1) #as integer
+        N1=int(round(n1)) #as integer
         n2=maxXIndex/f2 #finds corresponding index at upper disp bound
-        N2=round(n2) #as integer
+        N2=int(round(n2)) #as integer
          # finds stiffness
-        if aa==0
-            s(count) = y(N2)/x(N2)
-        else
-            s(count)=(y(N2)-y(N1))/(x(N2)-x(N1))
-
+        if aa==0:
+            s.append(y[N2]/x[N2])
+        else:
+            s.append((y[N2]-y[N1])/(x[N2]-x[N1]))
+        aa = aa + 0.05
 
 
     MaxS =max(s)
+    allRes = allRes + folder[:-16] + ', ' + str(MaxS) + '\n'
 
-
+print(allRes)
+pc.copy(allRes)
+print('Results copies to clipboard')
