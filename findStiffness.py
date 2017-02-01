@@ -2,11 +2,11 @@ import os
 import pandas
 import pyperclip as pc
 incrSize = 0.1
-filemaxXIndexirLoc = "M:/HT_Compression_Usable_Set/"  #maxXIndexirectory to .csv
+fileDir = "M:/HT_Compression_Usable_Set/"  #maxXIndexirectory to .csv
 allRes = ''
-os.chdir(filemaxXIndexirLoc)
+os.chdir(fileDir)
  # Scan through them separating them.
-listOfFolderNames = os.listdir(filemaxXIndexirLoc)
+listOfFolderNames = os.listdir(fileDir)
 
  #find limits of plot ie. > 50 N to max
 for folder in listOfFolderNames:
