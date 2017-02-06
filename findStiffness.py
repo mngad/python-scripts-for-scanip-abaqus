@@ -56,7 +56,7 @@ for folder in listOfFolderNames:
     y = y[lower:]
     xmin = x[0]
     ymin = y[0]
-
+    fail = False
     for i in range(len(x)):
         #print('oldx = ' +str(x[i]))
         diff =  x[i] - xmin
@@ -79,8 +79,10 @@ for folder in listOfFolderNames:
         count=count+1 #count increase by 1 each loop
         aa = aa +5
     MaxS =max(s)
+    if(MaxS>s[-1:]):
+        fail = True
     Mindex = s.index(max(s))
-    allRes = allRes + folder[:-16] + ', ' + str(MaxS) +  '\n'
+    allRes = allRes + folder[:-16] + ', ' + str(MaxS) + ', fail = ' + str(fail) +  '\n'
     #print(folder)
 
 print(allRes)
