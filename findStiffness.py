@@ -1,8 +1,8 @@
 import os
 import pandas
 import pyperclip as pc
-incrSize = 0.1
-fileDir = "M:/HT_Compression_Usable_Set/"  #maxXIndexirectory to .csv
+incrSize = 0.01
+fileDir = "M:/HT_Compression_3+post/"  #maxXIndexirectory to .csv
 allRes = ''
 os.chdir(fileDir)
  # Scan through them separating them.
@@ -52,14 +52,31 @@ for folder in listOfFolderNames:
     y = ydata.tolist()
     x = x[lower:]
     y = y[lower:]
+    xmin = x[0]
+    ymin = y[0]
+
+    for i in range(len(x)):
+        #print('oldx = ' +str(x[i]))
+        diff =  x[i] - xmin
+        x[i] = diff
+       # print('x = ' +str(x[i]))
+
+
+
+
+
+
     m=max(x) #finds max displacement value
     maxXIndex = x.index(m)
     bb=m-incrSize #finds beginning value of last displacement section
-    b=(round(bb,1))-0.1 #rounds to nearest 0.1 (10^-1) and takes 0.1 so the last chunk is always a full 0.6
+    b=(round(bb,2))-incrSize #rounds to nearest 0.1 (10^-1) and takes 0.1 so the last chunk is always a full 0.6
     count=0 #starts an integer count
     aa = 0
+    #print('m = ' + str(m))
+    #print('bb = ' + str(bb))
+    #print('round(bb,1) = ' + str(round(bb,2)))
+    #print('b = ' + str(b))
     while aa < b:
-        count=count+1 #count increase by 1 each loop
         f1 = m/aa #finds division value required to get corresponding index for the given lower disp. bound
         f2=m/incrSize+aa #same for upper disp bound
         n1=maxXIndex/f1  #finds corresponding index at lower disp bound
@@ -68,14 +85,17 @@ for folder in listOfFolderNames:
         N2=int(round(n2)) #as integer
          # finds stiffness
         if aa==0:
-            s.append(y[N2]/x[N2])
+            s.append(0)
         else:
             s.append((y[N2]-y[N1])/(x[N2]-x[N1]))
-        aa = aa + 0.05
+        aa = aa + 0.0005
+        #print(str(aa) + ', ' + str(s[count]))
+        count=count+1 #count increase by 1 each loop
 
 
     MaxS =max(s)
     allRes = allRes + folder[:-16] + ', ' + str(MaxS) + '\n'
+    #print(folder)
 
 print(allRes)
 pc.copy(allRes)
