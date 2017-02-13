@@ -256,7 +256,7 @@ def saveinpcae(modelname, outputpath):
     print >> sys.__stdout__, 'Creating job'
     jobname = modelname+ 'setup'
     print jobname
-    mdb.Job(name=jobname, model=modelname, description='', type=ANALYSIS, atTime=None, waitMinutes=0, waitHours=0, queue=None, memory=50, memoryUnits=PERCENTAGE, getMemoryFromAnalysis=True, explicitPrecision=SINGLE, nodalOutputPrecision=SINGLE, echoPrint=OFF, modelPrint=OFF, contactPrint=OFF, historyPrint=OFF, userSubroutine='', scratch='', parallelizationMethodExplicit=DOMAIN, multiprocessingMode=DEFAULT, numDomains=1, numCpus=1)
+    mdb.Job(name=jobname, model=modelname, description='', type=ANALYSIS, atTime=None, waitMinutes=0, waitHours=0, queue=None, memory=90, memoryUnits=PERCENTAGE, getMemoryFromAnalysis=True, explicitPrecision=SINGLE, nodalOutputPrecision=SINGLE, echoPrint=OFF, modelPrint=OFF, contactPrint=OFF, historyPrint=OFF, userSubroutine='', scratch='', parallelizationMethodExplicit=DOMAIN, multiprocessingMode=THREADS, numDomains=8, numCpus=8)
     os.chdir(outputpath)
     print >> sys.__stdout__, 'Saving .cae file'
     mdb.saveAs(pathName=os.path.join(outputpath, modelname))
