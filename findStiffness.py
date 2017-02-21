@@ -12,38 +12,17 @@ def findStiffness(segSize, incrSize):
 
      #find limits of plot ie. > 50 N to max
     for folder in listOfFolderNames:
-        Fi=0
-        maxXIndexi=0 #finds all index values for x and y
-         #plot(x,y)
-        maxXIndex=0 #Finds max index value
-        m=0 #finds max displacement value
-        bb=0 #finds beginning value of last displacement section
-        b=0 #rounds to nearest 0.1 (10^-1) and takes 0.1 so the last chunk is always a full 0.6
-        count=0 #starts an integer count
-         #from a to last displacement section in 0.1s
-
-        f1 = 0 #finds division value required to get corresponding index for the given lower disp. bound
-        f2=0 #same for upper disp bound
-        n1=0  #finds corresponding index at lower disp bound
-        N1=0 #as integer
-        n2=0 #finds corresponding index at upper disp bound
-        N2=0 #as integer
-         # finds stiffness
-
         s =[]
         MaxS =0
         lower = 0
         upper = 0
-         #for n=1:length(max)
-             #max{n} = 0
         m=0
-         #
         fileLoc =  folder + '/Specimen_RawData_1.csv'
         data = pandas.read_csv(fileLoc,header = 1)
 
         countr =0
         load = list(data['(N)'])
-        for i in load:
+        for i in load: # removes the cycling preload from the data
             if(i<=51):
                 lower = countr
             countr = countr + 1
@@ -57,27 +36,28 @@ def findStiffness(segSize, incrSize):
         xmin = x[0]
         ymin = y[0]
         fail = False
-        for i in range(len(x)):
-            #print('oldx = ' +str(x[i]))
+        c=0
+        for i in range(len(x)):# starts the data at 0 not 50
             diff =  x[i] - xmin
             x[i] = diff
-           # print('x = ' +str(x[i]))
-        count=0 #starts an integer count
-        aa = int(len(x)/4)
-        #print(len(x))
-        while aa < (len(x)-(segSize+incrSize)):
-            #print(count)
+
+        for i in range(len(x)): # finds an appropriate starting point so that the last segment is always up to the end of the data
+            c = c + 1
+            if ((len(x)-1)-(incrSize*c)-segSize)<(incrSize):# the -1 is there due to array starting at 0 -> e.g. len(x) =56; but x-56= is out of bounds :)
+                aa =len(x)-(incrSize*c)-1-segSize
+                print('aa = ' + str(aa) + ', len(x) = ' + str(len(x)))
+                break
+
+        while (aa+segSize+incrSize) < len(x):
             s.append((y[aa + segSize]-y[aa])/(x[aa+segSize]-x[aa]))
-            #print(str(aa) + ', ' + str(s[count]))
-            count=count+1 #count increase by 1 each loop
             aa = aa +incrSize
 
         MaxS =max(s)
         if(MaxS>s[-1:]):
             fail = True
         Mindex = s.index(max(s))
-        allRes = allRes + str(segSize) + ', ' + folder[:-16] + ', ' + str(MaxS) + ', fail = ' + str(fail) +  '\n'
-        #print(folder)
+        #allRes = allRes + str(segSize) + ', ' + folder[:-16] + ', ' + str(MaxS) + ', fail = ' + str(fail) +  '\n'
+        allRes = allRes + folder[:-16] + ', ' + str(MaxS) +  '\n'
 
     print(allRes)
     pc.copy(allRes)
@@ -85,4 +65,4 @@ def findStiffness(segSize, incrSize):
     #print('Results copies to clipboard')
 
 
-findStiffness(20,1)
+#findStiffness(20,20)
