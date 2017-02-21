@@ -91,9 +91,9 @@ if InputDialog.AskYesNoQuestion('Align', 'Have you aligned the model?') == True:
 
 	# Flood fill the two end-caps to separate them
 	doc.GetMaskByName("Superior_endcap").Activate()
-	doc.FloodFillFromActiveMask(57, 19, 37, False, Doc.Mode3D, Doc.ReplaceWithMask, doc.GetSliceIndices(Doc.OrientationYZ), Doc.OrientationYZ)
+	doc.FloodFillFromActiveMask(57, 19, 32, False, Doc.Mode3D, Doc.ReplaceWithMask, doc.GetSliceIndices(Doc.OrientationYZ), Doc.OrientationYZ)
 	doc.GetMaskByName("Inferior_endcap").Activate()
-	doc.FloodFillFromActiveMask(57, 17, 9, False, Doc.Mode3D, Doc.ReplaceWithMask, doc.GetSliceIndices(Doc.OrientationYZ), Doc.OrientationYZ)
+	doc.FloodFillFromActiveMask(57, 17, 5, False, Doc.Mode3D, Doc.ReplaceWithMask, doc.GetSliceIndices(Doc.OrientationYZ), Doc.OrientationYZ)
 
 	# remove void from centre of vertebra
 	doc.GetMaskByName("Vertebra").Activate()
