@@ -84,3 +84,5 @@ def findStiffness(segSize, incrSize):
     return(allRes)
     #print('Results copies to clipboard')
 
+
+findStiffness(20,1)
