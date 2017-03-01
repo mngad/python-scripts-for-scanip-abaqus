@@ -4,7 +4,7 @@ import pyperclip as pc
 import re
 
 def findStiffness(segSize, incrSize):
-    fileDir = "M:/HT_Compression_3+post/"  #maxXIndexirectory to .csv
+    fileDir = "M:/HT_Compression_3+post+frozen/"  #maxXIndexirectory to .csv
     allRes = ''
     os.chdir(fileDir)
      # Scan through them separating them.
@@ -57,7 +57,7 @@ def findStiffness(segSize, incrSize):
             fail = True
         Mindex = s.index(max(s))
         #allRes = allRes + str(segSize) + ', ' + folder[:-16] + ', ' + str(MaxS) + ', fail = ' + str(fail) +  '\n'
-        allRes = allRes + folder[:-16] + ', ' + str(MaxS) +  '\n'
+        allRes = allRes + folder[:-16] + ', ' + str(MaxS) + ', fail = ' + str(fail) + '\n'
 
     print(allRes)
     pc.copy(allRes)
@@ -65,4 +65,4 @@ def findStiffness(segSize, incrSize):
     #print('Results copies to clipboard')
 
 
-#findStiffness(20,20)
+findStiffness(10,1)
