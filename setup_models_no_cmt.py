@@ -28,7 +28,7 @@ yield_strain = 0.01
 input_directory = os.getcwd() + '/'
 output_directory = os.getcwd() + '/' #gets current directory
 #conversion_factory = 0.0135976641182
-conversion_factory = 0.012529
+conversion_factory = 0.001
 cementMod=1.715
 interfaceMod=1.715
 E1=0.7
@@ -247,7 +247,7 @@ def loadLoadPointCsv(csvFilePath, modelName):
 
     loadPoints = [0.0, 0.0, 0.0]
     for searchModel in loadData:
-        if modelName.startswith(searchModel[0]):
+        if modelName == searchModel[0]:
             loadPoints[0] = float(searchModel[1])
             loadPoints[1] = float(searchModel[2])
             loadPoints[2] = float(searchModel[3])
