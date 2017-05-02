@@ -8,12 +8,12 @@ if InputDialog.AskYesNoQuestion('Align', 'Have you aligned the model?') == True:
 	#doc.ResampleDataByPixelSpacing(1, 1, 1, doc.PartialVolumeEffectInterpolation, doc.PartialVolumeEffectInterpolation)
 
 	# Select vertebrae mask & open and close it
-	doc.Threshold(17, 255, Doc.CreateNewMask, doc.GetSliceIndices(Doc.OrientationYZ), Doc.OrientationYZ)
+	doc.Threshold(20, 255, Doc.CreateNewMask, doc.GetSliceIndices(Doc.OrientationYZ), Doc.OrientationYZ)
 	doc.ApplyCloseFilter(Doc.TargetMask, 1, 1, 1, 0)
 	#doc.ApplyOpenFilter(Doc.TargetMask, 1, 1, 1, 0) #no need for this
 
 	# Select both endcaps, open and close
-	doc.Threshold(10, 20, Doc.CreateNewMask, doc.GetSliceIndices(Doc.OrientationYZ), Doc.OrientationYZ)
+	doc.Threshold(12, 20, Doc.CreateNewMask, doc.GetSliceIndices(Doc.OrientationYZ), Doc.OrientationYZ)
 	doc.ApplyCloseFilter(Doc.TargetMask, 1, 1, 1, 0)
 	doc.ApplyOpenFilter(Doc.TargetMask, 1, 1, 1, 0) #still need it here to remove extra "cement" around the top and bottom of the vertebra
 
@@ -91,9 +91,9 @@ if InputDialog.AskYesNoQuestion('Align', 'Have you aligned the model?') == True:
 
 	# Flood fill the two end-caps to separate them
 	doc.GetMaskByName("Superior_endcap").Activate()
-	doc.FloodFillFromActiveMask(57, 19, 32, False, Doc.Mode3D, Doc.ReplaceWithMask, doc.GetSliceIndices(Doc.OrientationYZ), Doc.OrientationYZ)
+	doc.FloodFillFromActiveMask(57, 58, 38, False, Doc.Mode3D, Doc.ReplaceWithMask, doc.GetSliceIndices(Doc.OrientationYZ), Doc.OrientationYZ)
 	doc.GetMaskByName("Inferior_endcap").Activate()
-	doc.FloodFillFromActiveMask(57, 17, 5, False, Doc.Mode3D, Doc.ReplaceWithMask, doc.GetSliceIndices(Doc.OrientationYZ), Doc.OrientationYZ)
+	doc.FloodFillFromActiveMask(57, 58, 17, False, Doc.Mode3D, Doc.ReplaceWithMask, doc.GetSliceIndices(Doc.OrientationYZ), Doc.OrientationYZ)
 
 	# remove void from centre of vertebra
 	doc.GetMaskByName("Vertebra").Activate()
