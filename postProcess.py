@@ -1,7 +1,3 @@
-import time
-from abaqus import mdb
-backwardCompatibility.setValues(reportDeprecated=False)
-from abaqusConstants import ON,THREADS
 from abaqus import *
 from abaqusConstants import *
 from driverUtils import executeOnCaeGraphicsStartup
@@ -33,36 +29,52 @@ import displayGroupOdbToolset as dgo
 import connectorBehavior
 
 input_directory = os.getcwd() + '/'
-output_directory = os.getcwd() + '/' #gets current directory
+output_directory = os.getcwd() + '/'  # gets current directory
 stiffness = ''
 
+
 def getfiles(mypath, filetype):
-    print >> sys.__stdout__, 'Loading list of [chosen file type] files from chosen directory'
-    caefilelist=[]
-    onlyfiles = [ f for f in listdir(mypath) if isfile(join(mypath,f))]
+    print >> sys.__stdout__, 'Loading list of [chosen file type] \
+            files from chosen directory'
+    caefilelist = []
+    onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
     for files in onlyfiles:
         if files.endswith(filetype):
-           caefilelist.append(files)
+            caefilelist.append(files)
     return caefilelist
+
 
 def outputStiffness(modelNameforstiffness):
     from abaqusConstants import *
     from abaqus import *
-    print >> sys.__stdout__, 'Outputting stiffness for model' + modelNameforstiffness
-    odb = session.openOdb(name= input_directory + modelNameforstiffness + '.odb')
+    print >> sys.__stdout__, 'Outputting stiffness for model' \
+            + modelNameforstiffness
+    odb = session.openOdb(
+        name=input_directory +
+        modelNameforstiffness +
+        '.odb')
     #odb = session.odbs[modelNameforstiffness + '_ABAQUS.odb' ]
     session.viewports['Viewport: 1'].setValues(displayedObject=odb)
-    session.xyDataListFromField(odb=odb, outputPosition=NODAL, variable=(('RF',NODAL, ((COMPONENT, 'RF3'), )), ), nodeSets=('REFERENCE_POINT_PLATEN-1        1', ))
+    session.xyDataListFromField(
+        odb=odb, outputPosition=NODAL, variable=(
+            ('RF', NODAL, ((COMPONENT, 'RF3'), )), ), nodeSets=(
+            'REFERENCE_POINT_PLATEN-1        1', ))
     x0 = 0
     x0 = session.xyDataObjects['RF:RF3 PI: PLATEN-1 N: 1']
     stiffness = x0
-    session.writeXYReport(fileName=modelNameforstiffness + '.txt' , xyData=(x0, ))
+    session.writeXYReport(
+        fileName=modelNameforstiffness +
+        '.txt',
+        xyData=(
+            x0,
+        ))
     odb.close()
-    #delete xy data so that the new one for the next model has the same name
+    # delete xy data so that the new one for the next model has the same name
     del session.xyDataObjects['RF:RF3 PI: PLATEN-1 N: 1']
 
+
 def combineToOneFile():
-    #horrible function to combine all the files with stiffnesses into one file
+    # horrible function to combine all the files with stiffnesses into one file
     os.chdir(output_directory)
     txtList = []
     allfiles = [f for f in listdir(output_directory) if isfile(join(output_directory,f))]
@@ -73,7 +85,7 @@ def combineToOneFile():
     o = open('allStiffness.txt', 'w')
     for currentfile in txtList:
         f = open(currentfile, 'r')
-        i=0
+        i = 0
         for line in f:
             if "     1." in line:
                 print >> sys.__stdout__, line
@@ -83,7 +95,8 @@ def combineToOneFile():
         f.close()
     o.close()
 
-def main():
+
+if __name__ == "__main__":
     os.chdir(output_directory)
     cae_list = []
     cae_list = getfiles(input_directory, "_ABAQUS.cae")
@@ -94,5 +107,3 @@ def main():
     else:
         print >> sys.__stdout__, 'No Files in Dir'
     combineToOneFile()
-
-main()
